@@ -1,10 +1,9 @@
-import { AuthModule } from './modules/auth/AuthModule';
-import { Module } from '@nestjs/common';
-import { RolesModule } from './modules/roles/RolesModule';
-import { UsersModule } from './modules/users/UsersModule';
-import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './modules/auth/AuthModule';
 import { DatabaseModule } from './modules/database/DatabaseModule';
+import { UsersModule } from './modules/users/UsersModule';
 
 @Module({
     imports: [
@@ -19,7 +18,6 @@ import { DatabaseModule } from './modules/database/DatabaseModule';
         }),
         DatabaseModule,
         UsersModule,
-        RolesModule,
         AuthModule,
     ],
 

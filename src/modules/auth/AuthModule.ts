@@ -6,12 +6,10 @@ import AppConfigService from '../config/services/AppConfigService';
 import AuthConfigService from '../config/services/AuthConfigService';
 import JwtConfigService from '../config/services/JwtConfigService';
 import { UsersModule } from '../users/UsersModule';
-import { MailModule } from './../mail/MailModule';
 import { JwtStrategy } from './strategies/JwtStrategy';
 
 @Module({
     imports: [
-        MailModule,
         UsersModule,
         PassportModule,
         JwtModule.registerAsync({
