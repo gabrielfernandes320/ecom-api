@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import CreateAddressDTO from './CreateAddressDTO';
 
 export default class CreateUserDTO {
     @IsNotEmpty()
@@ -13,12 +14,8 @@ export default class CreateUserDTO {
     public email: string;
 
     @IsNotEmpty()
-    @ApiProperty({ example: [{ id: 1 }] })
-    public roles: [{ id: number }];
-
-    @IsNotEmpty()
     @ApiProperty()
-    public password: string;
+    public address: CreateAddressDTO[];
 
     @IsNotEmpty()
     @IsBoolean()

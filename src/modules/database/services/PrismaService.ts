@@ -16,7 +16,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
     private async useSoftDelete() {
         this.$use(async (params, next) => {
-            if (params.model == Prisma.ModelName.User) {
+            if (
+                params.model ==
+                (Prisma.ModelName.User || Prisma.ModelName.Order)
+            ) {
                 if (params.action == 'delete') {
                     params.action = 'update';
                     params.args['data'] = { deletedAt: new Date() };
@@ -41,7 +44,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         });
 
         this.$use(async (params, next) => {
-            if (params.model == Prisma.ModelName.User) {
+            if (
+                params.model ==
+                (Prisma.ModelName.User || Prisma.ModelName.Order)
+            ) {
                 if (params.action == 'findUnique') {
                     // Change to findFirst - you cannot filter
                     // by anything except ID / unique with findUnique

@@ -1,6 +1,5 @@
 import { Prisma, User } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
-import hashPassword from '../../../../../shared/utils/hashPassword';
 import { PrismaService } from '../../../../database/services/PrismaService';
 import ListUserDTO from '../../../dtos/ListUserDTO';
 import EmailAlreadyExistsException from '../../../exceptions/EmailAlreadyExistsException';
@@ -10,6 +9,7 @@ import IUsersRepository from '../../../repositories/IUsersRepository';
 @Injectable()
 export class UsersRepository implements IUsersRepository {
     public constructor(private prisma: PrismaService) {}
+
     public async findAll(params: ListUserDTO): Promise<any> {
         const { order, perPage, page, search } = params;
 
@@ -21,10 +21,10 @@ export class UsersRepository implements IUsersRepository {
         });
     }
 
-    public async findById(id: number): Promise<User> {
+    public async findById(id: string): Promise<User> {
         const user = await this.prisma.user.findUnique({
             where: { id },
-            include: { roles: { include: { permissions: true } } },
+            include: { address: true },
         });
 
         if (!user) {
@@ -34,7 +34,20 @@ export class UsersRepository implements IUsersRepository {
         return user;
     }
 
-    public async remove(id: number): Promise<void> {
+    public async findByAuthId(id: number): Promise<User> {
+        const user = await this.prisma.user.findFirst({
+            where: { authId: id },
+            include: { address: true },
+        });
+
+        if (!user) {
+            throw new UserNotFoundException(id.toString());
+        }
+
+        return user;
+    }
+
+    public async remove(id: string): Promise<void> {
         const affected: any = await this.prisma.user.delete({ where: { id } });
 
         if (affected.count === 0) {
@@ -49,19 +62,13 @@ export class UsersRepository implements IUsersRepository {
             throw new EmailAlreadyExistsException(data.email);
         }
 
-        data.password = await hashPassword(data.password);
-
         return await this.prisma.user.create({ data });
     }
 
     public async update(
-        id: number,
+        id: string,
         data: Prisma.UserUpdateInput,
     ): Promise<User> {
-        if (data.password) {
-            data.password = await hashPassword(data.password as string);
-        }
-
         const affected = await this.prisma.user.updateMany({
             where: { id },
             data,
@@ -77,7 +84,6 @@ export class UsersRepository implements IUsersRepository {
     public async findByEmail(email: string): Promise<User> {
         return await this.prisma.user.findUnique({
             where: { email },
-            include: { roles: { include: { permissions: true } } },
         });
     }
 }

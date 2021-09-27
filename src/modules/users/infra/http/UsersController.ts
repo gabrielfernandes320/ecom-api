@@ -46,8 +46,8 @@ export class UsersController {
         return await this.createUserService.execute(createUserDto);
     }
 
-    @Permissions(UserPermissions.List)
-    @UseGuards(PermissionsGuard)
+    // @Permissions(UserPermissions.List)
+    // @UseGuards(PermissionsGuard)
     @Get()
     public async findAll(@Query() query: ListUserDTO) {
         return await this.listUserService.execute(query);
