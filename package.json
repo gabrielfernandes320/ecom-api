@@ -25,6 +25,7 @@
         "seed:run": "npx prisma db seed",
         "migration:run:dev": "npx prisma migrate dev --schema=./src/modules/database/prisma/schema.prisma",
         "prisma:studio": "npx prisma studio --schema=./src/modules/database/prisma/schema.prisma",
+        "prisma:generate": "npx prisma generate --schema=./src/modules/database/prisma/schema.prisma",
         "migration:run:prod": "npx prisma migrate deploy --schema=./src/modules/database/prisma/schema.prisma",
         "migration:create": "npx prisma migrate dev --schema=./src/modules/database/prisma/schema.prisma --name"
     },

@@ -1,8 +1,8 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './AppModule';
-import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+import { AppModule } from './AppModule';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -25,6 +25,6 @@ async function bootstrap() {
 
     SwaggerModule.setup('api', app, document);
 
-    await app.listen(3000);
+    await app.listen(3001);
 }
 bootstrap();

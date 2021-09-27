@@ -10,7 +10,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { plainToClass, TransformClassToPlain } from 'class-transformer';
+import { TransformClassToPlain } from 'class-transformer';
 import { Permissions } from '../../../auth/decorators/PermissionsDecorator';
 import { UserPermissions } from '../../../auth/enums/permissions';
 import JwtAuthenticationGuard from '../../../auth/guards/JwtAuthenticationGuard';
