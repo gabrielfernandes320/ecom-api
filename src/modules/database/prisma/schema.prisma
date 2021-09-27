@@ -7,38 +7,107 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Permission {
-  id          Int                 @id @default(autoincrement())
-  name        String              @db.VarChar
-  reference   String              @db.VarChar
-  resource    String              @db.VarChar
-  action      String              @db.VarChar
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  deletedAt   DateTime?           @db.Timestamp(6)
-  roles       Role[]
-}
-
-model Role {
-  id            Int                 @id @default(autoincrement())
-  name          String              @db.VarChar
-  reference     String?             @db.VarChar
-  enabled       Boolean
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  deletedAt     DateTime?           @db.Timestamp(6)
-  permissions   Permission[]
-  users         User[]
-}
-
 model User {
-  id         Int          @id @default(autoincrement())
-  name       String       @db.VarChar
-  email      String       @unique() @db.VarChar
-  password   String       @db.VarChar
-  enabled    Boolean
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  deletedAt  DateTime?    @db.Timestamp(6)
-  roles      Role[]
+  id        String    @id @db.Uuid
+  name      String    @db.VarChar
+  authId    Int       @db.Integer
+  email     String    @unique @db.VarChar
+  enabled   Boolean   @db.Boolean
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @db.Timestamp(6)
+  address   Address[]
+  carts     Cart[]
+  order     Order[]
+}
+
+model Address {
+  id         String   @id @db.Uuid
+  zipCode    String   @db.VarChar
+  street     String   @db.VarChar
+  city       String   @db.VarChar
+  state      String   @db.VarChar
+  country    String   @db.VarChar
+  number     String?  @db.VarChar
+  complement String?  @db.VarChar
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?  @db.Uuid
+}
+
+model Category {
+  id          String    @id @db.Uuid
+  name        String    @db.VarChar
+  description String    @db.VarChar
+  enabled     Boolean   @db.Boolean
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id          String      @id @db.Uuid
+  name        String      @db.VarChar
+  description String      @db.VarChar
+  enabled     Boolean     @db.Boolean
+  price       Decimal     @db.Decimal(10, 2)
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  categoryId  String?     @db.Uuid
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  cartItem    CartItem[]
+  orderItem   OrderItem[]
+  discounts   Discount[]
+}
+
+model Cart {
+  id        String     @id @db.Uuid
+  user      User?      @relation(fields: [userId], references: [id])
+  userId    String?    @db.Uuid
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @db.Uuid
+  cart      Cart?    @relation(fields: [cartId], references: [id])
+  cartId    String?  @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.Uuid
+  quantity  Int      @db.Integer
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id        String      @id @db.Uuid
+  user      User?       @relation(fields: [userId], references: [id])
+  userId    String?     @db.Uuid
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?   @db.Timestamp(6)
+}
+
+model OrderItem {
+  id        String   @id @db.Uuid
+  cart      Order?   @relation(fields: [cartId], references: [id])
+  cartId    String?  @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.Uuid
+  quantity  Int      @db.Integer
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Discount {
+  id          String    @id @db.Uuid
+  name        String    @db.VarChar
+  description String    @db.VarChar
+  percentage  Decimal   @db.Decimal(3, 2)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
 }
