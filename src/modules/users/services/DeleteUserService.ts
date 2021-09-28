@@ -8,7 +8,7 @@ export default class DeleteUserService {
         private usersRepository: IUsersRepository,
     ) {}
 
-    public async execute(id: number) {
+    public async execute(id: string) {
         await this.usersRepository.remove(id);
     }
 }

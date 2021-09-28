@@ -9,7 +9,7 @@ export default class ShowUserService {
         private usersRepository: IUsersRepository,
     ) {}
 
-    public async execute(id: number): Promise<User> {
+    public async execute(id: string): Promise<User> {
         return await this.usersRepository.findById(id);
     }
 }

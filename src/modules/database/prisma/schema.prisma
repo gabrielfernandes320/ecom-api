@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id        String    @id @db.Uuid
+  id        String    @id @default(uuid())
   name      String    @db.VarChar
   authId    Int       @db.Integer
   email     String    @unique @db.VarChar
@@ -18,11 +18,11 @@ model User {
   deletedAt DateTime? @db.Timestamp(6)
   address   Address[]
   carts     Cart[]
-  order     Order[]
+  orders    Order[]
 }
 
 model Address {
-  id         String   @id @db.Uuid
+  id         String   @id @default(uuid())
   zipCode    String   @db.VarChar
   street     String   @db.VarChar
   city       String   @db.VarChar
@@ -33,11 +33,11 @@ model Address {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   user       User?    @relation(fields: [userId], references: [id])
-  userId     String?  @db.Uuid
+  userId     String?  @default(uuid())
 }
 
 model Category {
-  id          String    @id @db.Uuid
+  id          String    @id @default(uuid())
   name        String    @db.VarChar
   description String    @db.VarChar
   enabled     Boolean   @db.Boolean
@@ -47,13 +47,12 @@ model Category {
 }
 
 model Product {
-  id          String      @id @db.Uuid
+  id          String      @id @default(uuid())
   name        String      @db.VarChar
   description String      @db.VarChar
   enabled     Boolean     @db.Boolean
   price       Decimal     @db.Decimal(10, 2)
-  category    Category?   @relation(fields: [categoryId], references: [id])
-  categoryId  String?     @db.Uuid
+  categories  Category[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   cartItem    CartItem[]
@@ -62,29 +61,29 @@ model Product {
 }
 
 model Cart {
-  id        String     @id @db.Uuid
+  id        String     @id @default(uuid())
   user      User?      @relation(fields: [userId], references: [id])
-  userId    String?    @db.Uuid
+  userId    String?    @default(uuid())
   items     CartItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
 
 model CartItem {
-  id        String   @id @db.Uuid
+  id        String   @id @default(uuid())
   cart      Cart?    @relation(fields: [cartId], references: [id])
-  cartId    String?  @db.Uuid
+  cartId    String?  @default(uuid())
   product   Product  @relation(fields: [productId], references: [id])
-  productId String   @db.Uuid
+  productId String   @default(uuid())
   quantity  Int      @db.Integer
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Order {
-  id        String      @id @db.Uuid
+  id        String      @id @default(uuid())
   user      User?       @relation(fields: [userId], references: [id])
-  userId    String?     @db.Uuid
+  userId    String?     @default(uuid())
   items     OrderItem[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -92,18 +91,18 @@ model Order {
 }
 
 model OrderItem {
-  id        String   @id @db.Uuid
+  id        String   @id @default(uuid())
   cart      Order?   @relation(fields: [cartId], references: [id])
-  cartId    String?  @db.Uuid
+  cartId    String?  @default(uuid())
   product   Product  @relation(fields: [productId], references: [id])
-  productId String   @db.Uuid
+  productId String   @default(uuid())
   quantity  Int      @db.Integer
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Discount {
-  id          String    @id @db.Uuid
+  id          String    @id @default(uuid())
   name        String    @db.VarChar
   description String    @db.VarChar
   percentage  Decimal   @db.Decimal(3, 2)

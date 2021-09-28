@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" VARCHAR NOT NULL,
     "authId" INTEGER NOT NULL,
     "email" VARCHAR NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Address" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "zipCode" VARCHAR NOT NULL,
     "street" VARCHAR NOT NULL,
     "city" VARCHAR NOT NULL,
@@ -24,14 +24,14 @@ CREATE TABLE "Address" (
     "complement" VARCHAR,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" UUID,
+    "userId" TEXT,
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Category" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" VARCHAR NOT NULL,
     "description" VARCHAR NOT NULL,
     "enabled" BOOLEAN NOT NULL,
@@ -43,12 +43,11 @@ CREATE TABLE "Category" (
 
 -- CreateTable
 CREATE TABLE "Product" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" VARCHAR NOT NULL,
     "description" VARCHAR NOT NULL,
     "enabled" BOOLEAN NOT NULL,
     "price" DECIMAL(10,2) NOT NULL,
-    "categoryId" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -57,8 +56,8 @@ CREATE TABLE "Product" (
 
 -- CreateTable
 CREATE TABLE "Cart" (
-    "id" UUID NOT NULL,
-    "userId" UUID,
+    "id" TEXT NOT NULL,
+    "userId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -67,9 +66,9 @@ CREATE TABLE "Cart" (
 
 -- CreateTable
 CREATE TABLE "CartItem" (
-    "id" UUID NOT NULL,
-    "cartId" UUID,
-    "productId" UUID NOT NULL,
+    "id" TEXT NOT NULL,
+    "cartId" TEXT,
+    "productId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -79,8 +78,8 @@ CREATE TABLE "CartItem" (
 
 -- CreateTable
 CREATE TABLE "Order" (
-    "id" UUID NOT NULL,
-    "userId" UUID,
+    "id" TEXT NOT NULL,
+    "userId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(6),
@@ -90,9 +89,9 @@ CREATE TABLE "Order" (
 
 -- CreateTable
 CREATE TABLE "OrderItem" (
-    "id" UUID NOT NULL,
-    "cartId" UUID,
-    "productId" UUID NOT NULL,
+    "id" TEXT NOT NULL,
+    "cartId" TEXT,
+    "productId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -102,7 +101,7 @@ CREATE TABLE "OrderItem" (
 
 -- CreateTable
 CREATE TABLE "Discount" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" VARCHAR NOT NULL,
     "description" VARCHAR NOT NULL,
     "percentage" DECIMAL(3,2) NOT NULL,
@@ -113,13 +112,25 @@ CREATE TABLE "Discount" (
 );
 
 -- CreateTable
+CREATE TABLE "_CategoryToProduct" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "_DiscountToProduct" (
-    "A" UUID NOT NULL,
-    "B" UUID NOT NULL
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_CategoryToProduct_AB_unique" ON "_CategoryToProduct"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_CategoryToProduct_B_index" ON "_CategoryToProduct"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_DiscountToProduct_AB_unique" ON "_DiscountToProduct"("A", "B");
@@ -129,9 +140,6 @@ CREATE INDEX "_DiscountToProduct_B_index" ON "_DiscountToProduct"("B");
 
 -- AddForeignKey
 ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -150,6 +158,12 @@ ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_cartId_fkey" FOREIGN KEY ("car
 
 -- AddForeignKey
 ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CategoryToProduct" ADD FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CategoryToProduct" ADD FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_DiscountToProduct" ADD FOREIGN KEY ("A") REFERENCES "Discount"("id") ON DELETE CASCADE ON UPDATE CASCADE;

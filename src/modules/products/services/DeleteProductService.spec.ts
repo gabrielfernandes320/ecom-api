@@ -1,6 +1,6 @@
+import DeleteUserService from './DeleteUserService';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserMock } from '../mocks/UserMockFactory';
-import DeleteUserService from './DeleteUserService';
 
 describe('DeleteUserService', () => {
     let service: DeleteUserService;
