@@ -87,3 +87,5 @@ export class UsersRepository implements IUsersRepository {
         });
     }
 }
+
+export const USERS_REPOSITORY = 'USERS_REPOSITORY';

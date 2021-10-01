@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Product } from '@prisma/client';
 import UpdateProductDto from '../dtos/UpdateProductDto';
+import { PRODUCTS_REPOSITORY } from '../infra/prisma/repositories/ProductsRepository';
 import IProductsRepository from '../repositories/IProductsRepository';
 
 @Injectable()
 export default class UpdateProductService {
     public constructor(
-        @Inject('ProductsRepository')
+        @Inject(PRODUCTS_REPOSITORY)
         private usersRepository: IProductsRepository,
     ) {}
 

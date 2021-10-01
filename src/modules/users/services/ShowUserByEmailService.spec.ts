@@ -10,7 +10,7 @@ describe('ShowUserByEmailService', () => {
             providers: [
                 ShowUserByEmailService,
                 {
-                    provide: 'UsersRepository',
+                    provide: USERS_REPOSITORY,
                     useValue: mockUsersRepository,
                 },
             ],

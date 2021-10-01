@@ -4,12 +4,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import IUsersRepository from 'src/modules/users/repositories/IUsersRepository';
+import { USERS_REPOSITORY } from '../../users/infra/prisma/repositories/UsersRepository';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     public constructor(
         private configService: ConfigService,
-        @Inject('UsersRepository')
+        @Inject(USERS_REPOSITORY)
         private usersRepository: IUsersRepository,
     ) {
         super({

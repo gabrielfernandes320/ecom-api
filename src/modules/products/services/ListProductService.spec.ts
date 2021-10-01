@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { USERS_REPOSITORY } from '../../users/infra/prisma/repositories/UsersRepository';
 import ListUserDTO from '../dtos/ListUserDTO';
 import {
     mockUsersList,
@@ -16,7 +17,7 @@ describe('ListUserService', () => {
             providers: [
                 ListUserService,
                 {
-                    provide: 'UsersRepository',
+                    provide: USERS_REPOSITORY,
                     useValue: mockUsersRepository,
                 },
             ],

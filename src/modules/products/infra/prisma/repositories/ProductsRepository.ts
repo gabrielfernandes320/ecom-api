@@ -63,3 +63,5 @@ export class ProductsRepository implements IProductsRepository {
         return this.findById(id);
     }
 }
+
+export const PRODUCTS_REPOSITORY = 'PRODUCTS_REPOSITORY';

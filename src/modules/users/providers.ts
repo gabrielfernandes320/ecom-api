@@ -1,7 +1,10 @@
-import { UsersRepository } from './infra/prisma/repositories/UsersRepository';
+import {
+    UsersRepository,
+    USERS_REPOSITORY,
+} from './infra/prisma/repositories/UsersRepository';
 
 export const providers = [
-    { provide: 'UsersRepository', useClass: UsersRepository },
+    { provide: USERS_REPOSITORY, useClass: UsersRepository },
 ];
 
 export default providers;

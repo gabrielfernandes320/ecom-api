@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { USERS_REPOSITORY } from '../infra/prisma/repositories/UsersRepository';
 import { UserMock } from '../mocks/UserMockFactory';
 import DeleteUserService from './DeleteUserService';
 
@@ -19,7 +20,7 @@ describe('DeleteUserService', () => {
             providers: [
                 DeleteUserService,
                 {
-                    provide: 'UsersRepository',
+                    provide: USERS_REPOSITORY,
                     useValue: mockUsersRepository,
                 },
             ],
