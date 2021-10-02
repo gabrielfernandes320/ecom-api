@@ -2,6 +2,7 @@ import * as Joi from '@hapi/joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/AuthModule';
+import { CartsModule } from './modules/carts/CartsModule';
 import { DatabaseModule } from './modules/database/DatabaseModule';
 import { ProductsModule } from './modules/products/ProductsModule';
 import { UsersModule } from './modules/users/UsersModule';
@@ -21,6 +22,7 @@ import { UsersModule } from './modules/users/UsersModule';
         UsersModule,
         AuthModule,
         ProductsModule,
+        CartsModule,
     ],
 
     controllers: [],

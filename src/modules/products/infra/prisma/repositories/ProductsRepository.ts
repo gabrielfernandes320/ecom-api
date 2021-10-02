@@ -17,6 +17,7 @@ export class ProductsRepository implements IProductsRepository {
             take: perPage,
             orderBy: { id: order },
             where: search ? { name: { contains: search } } : {},
+            include: { cartItem: true },
         });
     }
 
