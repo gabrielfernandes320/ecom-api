@@ -1,4 +1,5 @@
 import { Prisma, User } from '.prisma/client';
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../database/services/PrismaService';
 import ListUserDTO from '../../../dtos/ListUserDTO';
@@ -8,7 +9,10 @@ import IUsersRepository from '../../../repositories/IUsersRepository';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
-    public constructor(private prisma: PrismaService) {}
+    public constructor(
+        private prisma: PrismaService,
+        private httpService: HttpService,
+    ) {}
 
     public async findAll(params: ListUserDTO): Promise<any> {
         const { order, perPage, page, search } = params;
@@ -29,19 +33,6 @@ export class UsersRepository implements IUsersRepository {
 
         if (!user) {
             throw new UserNotFoundException(id);
-        }
-
-        return user;
-    }
-
-    public async findByAuthId(id: number): Promise<User> {
-        const user = await this.prisma.user.findFirst({
-            where: { authId: id },
-            include: { address: true },
-        });
-
-        if (!user) {
-            throw new UserNotFoundException(id.toString());
         }
 
         return user;

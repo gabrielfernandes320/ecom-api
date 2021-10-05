@@ -5,6 +5,7 @@ import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import IUsersRepository from 'src/modules/users/repositories/IUsersRepository';
 import { USERS_REPOSITORY } from '../../users/infra/prisma/repositories/UsersRepository';
+import ShowLoggedUserService from '../../users/services/ShowLoggedUserService';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,6 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         private configService: ConfigService,
         @Inject(USERS_REPOSITORY)
         private usersRepository: IUsersRepository,
+        private showLoggedUserService: ShowLoggedUserService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
@@ -23,6 +25,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     public async validate(payload: any) {
-        return this.usersRepository.findByAuthId(payload.id);
+        console.log(payload);
+
+        return payload;
     }
 }

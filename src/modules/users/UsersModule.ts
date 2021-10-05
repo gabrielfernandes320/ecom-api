@@ -1,25 +1,27 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from '../database/DatabaseModule';
 import { PrismaService } from '../database/services/PrismaService';
 import providers from './providers';
-import DeleteUserService from './services/DeleteUserService';
-import ListUserService from './services/ListUserService';
-import ShowUserByEmailService from './services/ShowUserByEmailService';
-import ShowUserService from './services/ShowUserService';
 
 @Module({
-    imports: [DatabaseModule],
-    providers: [
-        ...[
-            ShowUserService,
-            ListUserService,
-            DeleteUserService,
-            ShowUserByEmailService,
-            PrismaService,
-        ],
-        ...providers,
+    imports: [
+        DatabaseModule,
+        ConfigModule,
+        HttpModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+                baseURL: configService.get('MS_AUTH_URL'),
+                headers: {
+                    Cookie: 'Authentication=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsIm5hbWUiOiJhZG1pbmlzdHJhdG9yIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6W3siaWQiOjEzLCJuYW1lIjoiQWRtaW5pc3RyYXRvciIsInJlZmVyZW5jZSI6bnVsbCwiZW5hYmxlZCI6dHJ1ZSwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC41MjBaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC41MjBaIiwiZGVsZXRlZEF0IjpudWxsLCJwZXJtaXNzaW9ucyI6W3siaWQiOjEzMSwibmFtZSI6Ikxpc3QgUm9sZXMiLCJyZWZlcmVuY2UiOiJMSVNUOlJPTEVTIiwicmVzb3VyY2UiOiJyb2xlIiwiYWN0aW9uIjoicmVhZCIsImNyZWF0ZWRBdCI6IjIwMjEtMDktMjdUMDA6NDI6MTguNDc1WiIsInVwZGF0ZWRBdCI6IjIwMjEtMDktMjdUMDA6NDI6MTguNDc1WiIsImRlbGV0ZWRBdCI6bnVsbH0seyJpZCI6MTMyLCJuYW1lIjoiQ3JlYXRlIFJvbGVzIiwicmVmZXJlbmNlIjoiQ1JFQVRFOlJPTEVTIiwicmVzb3VyY2UiOiJyb2xlIiwiYWN0aW9uIjoiY3JlYXRlIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfSx7ImlkIjoxMzMsIm5hbWUiOiJVcGRhdGUgUm9sZXMiLCJyZWZlcmVuY2UiOiJVUERBVEU6Uk9MRVMiLCJyZXNvdXJjZSI6InJvbGUiLCJhY3Rpb24iOiJ1cGRhdGUiLCJjcmVhdGVkQXQiOiIyMDIxLTA5LTI3VDAwOjQyOjE4LjQ3NVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTA5LTI3VDAwOjQyOjE4LjQ3NVoiLCJkZWxldGVkQXQiOm51bGx9LHsiaWQiOjEzNCwibmFtZSI6IkRlbGV0ZSBSb2xlcyIsInJlZmVyZW5jZSI6IkRFTEVURTpST0xFUyIsInJlc291cmNlIjoicm9sZSIsImFjdGlvbiI6ImRlbGV0ZSIsImNyZWF0ZWRBdCI6IjIwMjEtMDktMjdUMDA6NDI6MTguNDc1WiIsInVwZGF0ZWRBdCI6IjIwMjEtMDktMjdUMDA6NDI6MTguNDc1WiIsImRlbGV0ZWRBdCI6bnVsbH0seyJpZCI6MTM1LCJuYW1lIjoiU2hvdyBSb2xlcyIsInJlZmVyZW5jZSI6IlNIT1c6Uk9MRVMiLCJyZXNvdXJjZSI6InJvbGUiLCJhY3Rpb24iOiJyZWFkIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfSx7ImlkIjoxMzYsIm5hbWUiOiJMaXN0IFVzZXJzIiwicmVmZXJlbmNlIjoiTElTVDpVU0VSUyIsInJlc291cmNlIjoidXNlcnMiLCJhY3Rpb24iOiJyZWFkIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfSx7ImlkIjoxMzcsIm5hbWUiOiJDcmVhdGUgVXNlcnMiLCJyZWZlcmVuY2UiOiJDUkVBVEU6VVNFUlMiLCJyZXNvdXJjZSI6InVzZXJzIiwiYWN0aW9uIjoiY3JlYXRlIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfSx7ImlkIjoxMzgsIm5hbWUiOiJVcGRhdGUgVXNlcnMiLCJyZWZlcmVuY2UiOiJVUERBVEU6VVNFUlMiLCJyZXNvdXJjZSI6InVzZXJzIiwiYWN0aW9uIjoidXBkYXRlIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfSx7ImlkIjoxMzksIm5hbWUiOiJEZWxldGUgVXNlcnMiLCJyZWZlcmVuY2UiOiJERUxFVEU6VVNFUlMiLCJyZXNvdXJjZSI6InVzZXJzIiwiYWN0aW9uIjoiZGVsZXRlIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfSx7ImlkIjoxNDAsIm5hbWUiOiJTaG93IFVzZXJzIiwicmVmZXJlbmNlIjoiU0hPVzpVU0VSUyIsInJlc291cmNlIjoidXNlcnMiLCJhY3Rpb24iOiJyZWFkIiwiY3JlYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0yN1QwMDo0MjoxOC40NzVaIiwiZGVsZXRlZEF0IjpudWxsfV19XSwiaWF0IjoxNjMzMjA2ODgwLCJleHAiOjE2MzMyMTQwODB9.3jXh7S91tJxKSr3wPpXKBTS9o1PRxTL8RE6VysTFgrY; Max-Age=7200; Domain=localhost; Path=/; HttpOnly',
+                },
+            }),
+        }),
     ],
+    providers: [...[PrismaService], ...providers],
     controllers: [],
-    exports: [...[ShowUserByEmailService], ...providers],
+    exports: [...providers],
 })
 export class UsersModule {}

@@ -1,9 +1,10 @@
-import { Body, Controller, Patch, Req } from '@nestjs/common';
+import { Body, Controller, Patch, Req, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import JwtAuthenticationGuard from '../../../auth/guards/JwtAuthenticationGuard';
 import UpdateItemDto from '../../dtos/UpdateItemDto';
 import UpdateItemService from '../../services/UpdateItemService';
 
-//@UseGuards(JwtAuthenticationGuard)
+@UseGuards(JwtAuthenticationGuard)
 @ApiTags('Carts')
 @Controller({
     version: '1',

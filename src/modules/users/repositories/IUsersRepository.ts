@@ -12,6 +12,4 @@ export default interface IUsersRepository
     update(id: string, user: Prisma.UserUpdateInput): Promise<User>;
 
     findByEmail(email: string): Promise<User>;
-
-    findByAuthId(id: number): Promise<User>;
 }

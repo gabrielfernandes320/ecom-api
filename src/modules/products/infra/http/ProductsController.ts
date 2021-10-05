@@ -7,9 +7,11 @@ import {
     Patch,
     Post,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { TransformClassToPlain } from 'class-transformer';
+import JwtAuthenticationGuard from '../../../auth/guards/JwtAuthenticationGuard';
 import CreateProductDto from '../../dtos/CreateProductDto';
 import ListProductDto from '../../dtos/ListProductDto';
 import UpdateProductDto from '../../dtos/UpdateProductDto';
@@ -19,7 +21,7 @@ import ListProductService from '../../services/ListProductService';
 import ShowProductService from '../../services/ShowProductService';
 import UpdateProductService from '../../services/UpdateProductService';
 
-//@UseGuards(JwtAuthenticationGuard)
+@UseGuards(JwtAuthenticationGuard)
 @ApiTags('Products')
 @Controller({
     version: '1',
