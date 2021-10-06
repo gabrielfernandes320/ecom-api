@@ -11,12 +11,18 @@ export default class UpdateProductService {
         private usersRepository: IProductsRepository,
     ) {}
 
-    public async execute(id: string, user: UpdateProductDto): Promise<Product> {
-        const { categories, ...rest } = user;
+    public async execute(
+        id: string,
+        product: UpdateProductDto,
+    ): Promise<Product> {
+        const { categories, ...rest } = product;
 
         return await this.usersRepository.update(id, {
-            ...rest,
-            categories: { connect: categories },
+            id: rest.id,
+            description: rest.description,
+            enabled: rest.enabled,
+            price: rest.price,
+            name: rest.name,
         });
     }
 }

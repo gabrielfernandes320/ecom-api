@@ -17,7 +17,7 @@ export class ProductsRepository implements IProductsRepository {
             take: perPage,
             orderBy: { id: order },
             where: search ? { name: { contains: search } } : {},
-            include: { cartItem: true },
+            include: { cartItem: true, categories: true },
         });
     }
 
@@ -52,6 +52,8 @@ export class ProductsRepository implements IProductsRepository {
         id: string,
         data: Prisma.ProductUpdateInput,
     ): Promise<Product> {
+        console.log(data);
+
         const affected = await this.prisma.product.updateMany({
             where: { id },
             data,
